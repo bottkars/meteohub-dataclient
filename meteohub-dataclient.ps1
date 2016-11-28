@@ -43,15 +43,7 @@ function Get-MHDSensors
     $meteohub = $global:meteohub.name
     )
 [xml]$sensors = Invoke-WebRequest -UseBasicParsing -Uri $uri -ContentType "text/xml" -body @{'info'="sensorids";'quotes'="1";"mode"="info";type="xml"}# ).logger.sensor # -split "," | where {$_ -ne " "}
-#foreach ($sensor in $sensors)
- #   {
-  #  Write-Verbose "sensor : $sensor"
-   # $object = New-Object PSobject 
-    #$object | Add-Member -MemberType NoteProperty -Name Sensor -Value $sensor
-    #$object | Add-Member -MemberType NoteProperty -Name Station -Value $meteohub
-  #  Write-Output $object
-   # }
-# $sensors.logger.sensor | += $station | Select-Object 
+ 
 [psobject]$sensorsout = $sensors.logger.sensor 
 
 $sensorsout | Add-Member -TypeName MeteohubSensors
