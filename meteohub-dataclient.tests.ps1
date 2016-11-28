@@ -11,3 +11,16 @@ Describe "Get-Function" {
 		}
 	}
 }
+
+
+$uri = "http://meteohub.fritz.box/meteolog.cgi"
+
+
+#$body = @{"info=station";"info=sensors"}#
+
+@{'info'="station";"mode"="info"}
+Invoke-WebRequest -UseBasicParsing -Uri $uri -ContentType "text/xml" -body  @{'info'="sensorids";'quotes'="1";"mode"="info";type="xml"}
+Invoke-WebRequest -UseBasicParsing -Uri $uri -ContentType "text/xml" -body  @{'sensor'="th0";"mode"="data";"type"="xml"}
+
+
+

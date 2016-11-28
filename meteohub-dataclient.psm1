@@ -1,38 +1,4 @@
-﻿$netAssembly = [Reflection.Assembly]::GetAssembly([System.Net.Configuration.SettingsSection])
-
-if($netAssembly)
-{
-    $bindingFlags = [Reflection.BindingFlags] "Static,GetProperty,NonPublic"
-    $settingsType = $netAssembly.GetType("System.Net.Configuration.SettingsSectionInternal")
-
-    $instance = $settingsType.InvokeMember("Section", $bindingFlags, $null, $null, @())
-
-    if($instance)
-    {
-        $bindingFlags = "NonPublic","Instance"
-        $useUnsafeHeaderParsingField = $settingsType.GetField("useUnsafeHeaderParsing", $bindingFlags)
-
-        if($useUnsafeHeaderParsingField)
-        {
-          $useUnsafeHeaderParsingField.SetValue($instance, $true)
-        }
-    }
-}
-
-
-
-$uri = "http://meteohub.fritz.box/meteolog.cgi"
-
-
-#$body = @{"info=station";"info=sensors"}#
-
-@{'info'="station";"mode"="info"}
-Invoke-WebRequest -UseBasicParsing -Uri $uri -ContentType "text/xml" -body  @{'info'="sensorids";'quotes'="1";"mode"="info";type="xml"}
-Invoke-WebRequest -UseBasicParsing -Uri $uri -ContentType "text/xml" -body  @{'sensor'="th0";"mode"="data";"type"="xml"}
-
-
-
-
+﻿
 
 function Get-MHDSensors
 {
@@ -42,6 +8,8 @@ function Get-MHDSensors
     (
     $meteohub = $global:meteohub.name
     )
+$body = @{'info'="sensorids";'quotes'="1";"mode"="info";type="xml"}
+$uri = 
 [xml]$sensors = Invoke-WebRequest -UseBasicParsing -Uri $uri -ContentType "text/xml" -body @{'info'="sensorids";'quotes'="1";"mode"="info";type="xml"}# ).logger.sensor # -split "," | where {$_ -ne " "}
  
 [psobject]$sensorsout = $sensors.logger.sensor 
