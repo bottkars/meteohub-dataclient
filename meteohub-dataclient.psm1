@@ -6,10 +6,10 @@ function Get-MHDSensors
     [OutputType([int])]
     Param
     (
-    $meteohub = $global:meteohub.name
+    [String]$Station
     )
 $body = @{'info'="sensorids";'quotes'="1";"mode"="info";type="xml"}
-$uri = 
+$uri = "http://$($station)/meteolog.cgi"
 [xml]$sensors = Invoke-WebRequest -UseBasicParsing -Uri $uri -ContentType "text/xml" -body @{'info'="sensorids";'quotes'="1";"mode"="info";type="xml"}# ).logger.sensor # -split "," | where {$_ -ne " "}
  
 [psobject]$sensorsout = $sensors.logger.sensor 
